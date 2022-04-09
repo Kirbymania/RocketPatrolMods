@@ -1,10 +1,10 @@
 console.log("Hello from main.js");
 
 let config = {
-   scene: [Menu, Play],
-   type: Phaser.CANVAS,
+   type: Phaser.AUTO,
    width: 640,
-   height : 480
+   height : 480,
+   scene: [ Menu, Play ]
 };
 
 let borderUISize = config.height / 15;
