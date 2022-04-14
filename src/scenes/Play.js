@@ -7,6 +7,7 @@ class Play extends Phaser.Scene {
       // load images/tile sprites
       this.load.image('rocket', './assets/rocket.png');
       this.load.image('spaceship', './assets/spaceship.png');
+      this.load.image('spaceshipfire', './assets/spaceshipfire.png');
       this.load.image('ufo', './assets/spaceship2.png');
       this.load.image('starfield', './assets/starfield.png');
       // load spritesheet
@@ -23,12 +24,22 @@ class Play extends Phaser.Scene {
       this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
       this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
 
+      this.anims.create({
+         key: 'exhaust',
+         frames: [
+            {key: 'spaceship'},
+            {key: 'spaceshipfire'}
+         ],
+         frameRate: 5,
+         repeat: -1
+      });     
+
       // add rocket (p1)
       this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
       // add spaceships (x3)
-      this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0);
-      this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0);
-      this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0);
+      this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0).play('exhaust');
+      this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0).play('exhaust');
+      this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0).play('exhaust');
       this.ufo = new Spaceship2(this, game.config.width, borderUISize*3 + borderPadding*4, 'ufo', 0, 50).setOrigin(0,0);
 
       // define keys
