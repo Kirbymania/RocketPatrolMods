@@ -85,6 +85,23 @@ class Play extends Phaser.Scene {
       }
       this.scoreLeft = this.add.text(borderUISize + borderPadding, borderUISize + borderPadding*2, this.p1Score, scoreConfig);
 
+      // initialize hiscore
+      this.hiscore = 0;
+      // display score
+      let hiscoreConfig = {
+         fontFamily: 'Courier',
+         fontSize: '28px',
+         backgroundColor: '#F3B141',
+         color: '#843605',
+         align: 'right',
+         padding: {
+         top: 5,
+         bottom: 5,
+         },
+         fixedWidth: 0
+      }
+      this.hiscoreLeft = this.add.text(borderUISize + borderPadding*15, borderUISize + borderPadding*2, "Hi: " + this.hiscore, hiscoreConfig);
+
       // GAME OVER flag
       this.gameOver = false;
 
@@ -109,9 +126,24 @@ class Play extends Phaser.Scene {
          fixedWidth: 0
       }
       this.firing = this.add.text(borderUISize + borderPadding*35, borderUISize + borderPadding*2, 'FIRE', fireConfig);
+      this.firing.visible = false;
    }
 
    update() {
+      // update hi score
+      this.hiscoreLeft.text = "Hi: " + localStorage.getItem("hiscore");
+      if (localStorage.getItem("hiscore") < this.p1Score) {
+         localStorage.setItem("hiscore", this.p1Score);
+      }      
+
+      // display for hide FIRE UI
+      if (this.p1Rocket.isFiring == true){
+         this.firing.visible = true;
+      }
+      else {
+         this.firing.visible = false;
+      }
+
       // check key input for restart
       if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)) {
          this.scene.restart();
