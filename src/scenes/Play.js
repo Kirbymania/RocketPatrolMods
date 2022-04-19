@@ -10,12 +10,22 @@ class Play extends Phaser.Scene {
       this.load.image('spaceshipfire', './assets/spaceshipfire.png');
       this.load.image('ufo', './assets/spaceship2.png');
       this.load.image('starfield', './assets/starfield.png');
+      this.load.image('planets', './assets/planets.png');
       // load spritesheet
       this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+      // load bgm
+      this.load.audio('bgm', ['./assets/bensound-dreams.mp3']);
+      // credit to: https://www.bensound.com/royalty-free-music/electronica
    }
    create() {
+      // play music
+      this.music = game.sound.add('bgm', {loop: true});
+      this.music.play();
+
       // place tile sprite
-      this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
+      this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0).setScrollFactor(0);
+      this.planets = this.add.tileSprite(0, 0, 640, 480, 'planets').setOrigin(0, 0).setScrollFactor(0);
+
       // green UI background
       this.add.rectangle(0, borderUISize + borderPadding, game.config.width, borderUISize * 2, 0x00FF00).setOrigin(0, 0);
       // white borders
@@ -37,9 +47,12 @@ class Play extends Phaser.Scene {
       // add rocket (p1)
       this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize - borderPadding, 'rocket').setOrigin(0.5, 0);
       // add spaceships (x3)
-      this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, 30).setOrigin(0, 0).play('exhaust');
-      this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0).play('exhaust');
-      this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, 10).setOrigin(0,0).play('exhaust');
+      this.value = Phaser.Math.Between(1, 2);
+      this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 'spaceship', 0, this.value, 30).setOrigin(0, 0).play('exhaust');
+      this.value = Phaser.Math.Between(1, 2);
+      this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5 + borderPadding*2, 'spaceship', 0, this.value, 20).setOrigin(0,0).play('exhaust');
+      this.value = Phaser.Math.Between(1, 2);
+      this.ship03 = new Spaceship(this, game.config.width, borderUISize*6 + borderPadding*4, 'spaceship', 0, this.value, 10).setOrigin(0,0).play('exhaust');
       this.ufo = new Spaceship2(this, game.config.width, borderUISize*3 + borderPadding*4, 'ufo', 0, 50).setOrigin(0,0);
 
       // define keys
@@ -82,6 +95,20 @@ class Play extends Phaser.Scene {
          this.add.text(game.config.width/2, game.config.height/2 + 64, 'Press (R) to Restart or ← for Menu', scoreConfig).setOrigin(0.5);
          this.gameOver = true;
       }, null, this);
+
+      let fireConfig = {
+         fontFamily: 'Courier',
+         fontSize: '28px',
+         backgroundColor: '#F3B141',
+         color: '#843605',
+         align: 'right',
+         padding: {
+         top: 5,
+         bottom: 5,
+         },
+         fixedWidth: 0
+      }
+      this.firing = this.add.text(borderUISize + borderPadding*35, borderUISize + borderPadding*2, 'FIRE', fireConfig);
    }
 
    update() {
@@ -94,7 +121,10 @@ class Play extends Phaser.Scene {
          this.scene.start("menuScene");
       }
 
-      this.starfield.tilePositionX -= 4;
+      // scrolling backgrounds
+      this.starfield.tilePositionX -= 0.25;
+      this.planets.tilePositionX -= 0.5;
+
 
       if (!this.gameOver) {               
          this.p1Rocket.update();         // update rocket sprite
