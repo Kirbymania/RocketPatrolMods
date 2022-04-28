@@ -131,7 +131,7 @@ class Play extends Phaser.Scene {
 
    update() {
       // update hi score
-      this.hiscoreLeft.text = "Hi: " + localStorage.getItem("hiscore");
+      this.hiscoreLeft.text = "High: " + localStorage.getItem("hiscore");
       if (localStorage.getItem("hiscore") < this.p1Score) {
          localStorage.setItem("hiscore", this.p1Score);
       }      
