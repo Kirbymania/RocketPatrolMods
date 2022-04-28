@@ -125,7 +125,7 @@ class Play extends Phaser.Scene {
          },
          fixedWidth: 0
       }
-      this.firing = this.add.text(borderUISize + borderPadding*35, borderUISize + borderPadding*2, 'FIRE', fireConfig);
+      this.firing = this.add.text(borderUISize + borderPadding*35, borderUISize + borderPadding*2, 'SHOOT', fireConfig);
       this.firing.visible = false;
    }
 
